@@ -1,8 +1,4 @@
-from deepface import DeepFace
-import cv2
-import matplotlib.pyplot as plt
-from typing import Union
-
+from core import FaceRecognize
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, File, Form, UploadFile
 from datetime import datetime
@@ -11,38 +7,10 @@ import os
 # uvicorn main:app --reload  --host localhost --port 8000     
 # uvicorn main:app --reload  --host 10.251.2.119 --port 8000    
 # uvicorn main:app --reload  --host 0.0.0.0 --port 8000 (ini semua ip bisa harusnya karena dynamic-ipung)
-models = [
-  "VGG-Face", 
-  "Facenet", 
-  "Facenet512", 
-  "OpenFace", 
-  "DeepFace", 
-  "DeepID", 
-  "ArcFace", 
-  "Dlib", 
-  "SFace",
-  "GhostFaceNet",
-]
-
-def verify_faces(img1_path_data, img2_path_data):
-    result = DeepFace.verify(
-        img1_path=img1_path_data,
-        img2_path=img2_path_data,
-        model_name= models[2]
-    )
-    return result
-
-def detech_face(img):
-    try:
-        result = DeepFace.analyze(
-            img_path=img
-        )
-        return result
-    except:
-        return "no face"
-
 
 timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+
+mDeep = FaceRecognize(debug=True)
 
 def generate_file_location(filename: str) -> str:
     filename_without_extension = os.path.splitext(filename)[0]
@@ -67,7 +35,7 @@ async def recognise(file: UploadFile = File(...), img_name: str = Form(...)):
         with open(file_location, "wb+") as file_object:
             file_object.write(file.file.read())
             print(file_location)
-        data = verify_faces(file_location, f"img/{img_name}")
+        data = mDeep.verify_face(file_location, f"img/{img_name}")
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -82,7 +50,7 @@ async def upload(file: UploadFile = File(...), img_name: str = Form(...)):
         with open(file_location, "wb+") as file_object:
             file_object.write(file.file.read())
             print(f"File saved at: {file_location}")
-        detech = detech_face(file_location)
+        detech = mDeep.detect(file_location)
         if detech != "no face":
             return JSONResponse(content={"status": "success", "file_name": img_name}, status_code=200)
         else:
