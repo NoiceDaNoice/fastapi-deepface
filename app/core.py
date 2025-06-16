@@ -1,7 +1,7 @@
 from deepface import DeepFace
 import os
 
-class FaceRecognize(DeepFace):
+class FaceRecognize():
     
     def __init__(self, mModel: list, debug: bool):
         self.default_model = [
@@ -38,7 +38,7 @@ class FaceRecognize(DeepFace):
             print(f"Start detecting face on {img}")
         
         try:
-            return True, super().analyze(img_path=img)
+            return True, DeepFace.analyze(img_path=img)
         except Exception as err:
             raise ValueError(err)
     
@@ -50,6 +50,6 @@ class FaceRecognize(DeepFace):
             print(f"Verify {img1_path_data} | {img2_path_data} . . .")
         
         try:
-            return super().verify(img1_path=img1_path_data, img2_path=img2_path_data, model_name=model_name)
+            return DeepFace.verify(img1_path=img1_path_data, img2_path=img2_path_data, model_name=model_name)
         except Exception as err:
             raise ValueError(err)

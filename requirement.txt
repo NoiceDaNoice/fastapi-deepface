@@ -1,5 +1,0 @@
-fastapi[standard]
-deepface
-opencv-python-headless
-tensorflow
-keras

@@ -1,0 +1,15 @@
+# TensorFlow optimized for Apple Silicon (M1/M2)
+tensorflow==2.14.0
+tensorflow-metal
+# DeepFace without dependencies to avoid conflicts
+deepface
+
+# Other required libraries
+matplotlib
+opencv-python
+Pillow
+numpy
+uvicorn
+fastapi
+
+# PYHTON VERSION 3.9

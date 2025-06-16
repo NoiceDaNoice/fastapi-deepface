@@ -2,3 +2,5 @@
 .venv
 img/*
 upload/*
+!img/.gitkeep
+!upload/.gitkeep
